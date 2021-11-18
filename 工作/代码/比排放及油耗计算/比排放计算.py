@@ -3,7 +3,7 @@ import scipy
 from scipy.integrate import simps  # 用于计算积分
 import pandas as pd
 
-data = pd.read_excel('/Users/xuchangmao/Desktop/工作/排放模型/比排放及油耗计算/原始数据/高排放车原始数据/7月29日-8月14日---清洗后数据.xlsx')
+data = pd.read_excel('/Users/xuchangmao/Desktop/工作/排放模型/比排放及油耗计算/原始数据/高排放车原始数据/8月15-8月16日数据---清洗后数据.xlsx')
 data['日期'] = pd.to_datetime(data['时间']).dt.date  # 通过先转换为datetime类型，然后再提取出date参数，保留日期
 date_list = [x for _, x in data.groupby(data['日期'])]  # 通过一个list来保留划分为不同日期数据的dataframe
 max_torque = 1000
