@@ -35,8 +35,7 @@ def get_nox_curve(test_data):
     nox_integrals = []
     for i in range(len(y)):
         nox_integrals.append(scipy.integrate.trapz(y[:i + 1], x[:i + 1]))
-    print('nox曲线计算完成')
-    return nox_integrals[-1]*1000  # 单位是mg，最后的排放量
+    return nox_integrals[-1] * 1000  # 单位是mg，最后的排放量
 
 
 def get_work_curve(test_data):
@@ -63,7 +62,6 @@ def get_work_curve(test_data):
     integrals = []
     for i in range(len(y)):  # 计算梯形的面积，面积其实就是所作的功，由于是累加，所以是切片"i+1"
         integrals.append(scipy.integrate.trapz(y[:i + 1], x[:i + 1]))
-    print('累积功计算完成')
     return integrals[-1]  # integrals是累积功，而后面的是每秒的功率
 
 
@@ -75,18 +73,21 @@ def get_distance(test_data):
     return sum(v_distance) / 1000  # 最后返回的结果是km的单位
 
 
+# 构建3个list用来分别存储时间，比排放信息，最后组合形成一个总的dataframe
 list1 = []
 list2 = []
 list3 = []
 for df in date_list:
+    # 通过对每个df进行计算，datelist中存储的是按照日期进行分类以后的
     df_emission = get_nox_curve(df)
     df_distance = get_distance(df)
     df_work = get_work_curve(df)
     list1.append(str(df['日期'].iloc[0]))
     list2.append(df_emission / df_work)
     list3.append(df_emission / df_distance)
-info_pd= pd.DataFrame(
+    print('完成' + str(df['日期'].iloc[0] + '日的数据计算'))
+info_pd = pd.DataFrame(
     {'日期': list1,
      '比排放（mg/kw*h）': list2,
      '比排放（mg/km）': list3
-    })
+     })
