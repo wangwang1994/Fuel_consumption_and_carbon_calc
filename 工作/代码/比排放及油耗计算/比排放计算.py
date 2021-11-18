@@ -3,7 +3,7 @@ import scipy
 from scipy.integrate import simps  # 用于计算积分
 import pandas as pd
 
-data = pd.read_excel('/Users/xuchangmao/Desktop/工作/排放模型/比排放及油耗计算/原始数据/0号周期数据.xlsx')
+data = pd.read_excel('/Users/xuchangmao/Desktop/工作/排放模型/比排放及油耗计算/原始数据/高排放车原始数据/7月29日-8月14日---清洗后数据.xlsx')
 data['日期'] = pd.to_datetime(data['时间']).dt.date  # 通过先转换为datetime类型，然后再提取出date参数，保留日期
 date_list = [x for _, x in data.groupby(data['日期'])]  # 通过一个list来保留划分为不同日期数据的dataframe
 max_torque = 1000
@@ -77,6 +77,9 @@ def get_distance(test_data):
 list1 = []
 list2 = []
 list3 = []
+list4 = []
+list5 = []
+list6 = []
 for df in date_list:
     # 通过对每个df进行计算，datelist中存储的是按照日期进行分类以后的
     df_emission = get_nox_curve(df)
@@ -85,9 +88,16 @@ for df in date_list:
     list1.append(str(df['日期'].iloc[0]))
     list2.append(df_emission / df_work)
     list3.append(df_emission / df_distance)
-    print('完成' + str(df['日期'].iloc[0] + '日的数据计算'))
+    list4.append(df_emission)
+    list5.append(df_distance)
+    list6.append(df_work)
+    print('完成' + str(df['日期'].iloc[0]) + '日的数据计算')
+
 info_pd = pd.DataFrame(
     {'日期': list1,
      '比排放（mg/kw*h）': list2,
-     '比排放（mg/km）': list3
+     '比排放（mg/km）': list3,
+     '排放量（mg）': list4,
+     '行驶里程（km）': list5,
+     '累积功（kw*h）': list6,
      })
