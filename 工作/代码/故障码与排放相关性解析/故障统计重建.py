@@ -13,16 +13,18 @@ df = pd.DataFrame({'频次': [0],
                    }, index=time_list)
 # 使用这个list来存储进行处理以后的dataframe
 new_df_list = []
-
-for small_df in data.values():
+#接下来用这个新的空白的dataframe和每一个小的故障frame合并，合并以后按照日期去重，这样就只留下了有故障的行
+for small_df in data.values(): #data是一个字典，key是读取的excel的表名，而value是该表的内容
     small_df.rename(columns={'Unnamed: 0': '日期'}, inplace=True)  # 修改初始的第一列为日期
-    small_df['是否发生故障'] = 1
-    small_df.index = list(small_df['日期'])
-
-    pd2 = pd.concat([small_df, df], join='inner')
-    pd2 = pd2.drop_duplicates(subset=['日期'])
-
+    small_df['是否发生故障'] = 1                                 #新增一列为是否发生故障，因为是导出的故障dataframe，所以都设置为1
+    small_df.index = list(small_df['日期'])                    #修改故障dataframe的index为日期
+    pd2 = pd.concat([small_df, df], join='inner')              #将基准dataframe和故障dataframe合并
+    pd2 = pd2.drop_duplicates(subset=['日期'])    # 将合并后的dataframe去重，按照日期列
     pd2['日期'] = pd2.index.to_list()
     pd2 = pd2.reindex(time_list)
     pd2['故障类型']=small_df['故障类型'][0]
     new_df_list.append(pd2)
+writer = pd.ExcelWriter('/Users/xuchangmao/Desktop/工作/排放模型/故障分析/故障与排放相关性分析/故障码数据/故障频次统计更新版.xlsx')
+for i in range(len(new_df_list)):
+    new_df_list[i].to_excel(writer, str(i))
+writer.save()
