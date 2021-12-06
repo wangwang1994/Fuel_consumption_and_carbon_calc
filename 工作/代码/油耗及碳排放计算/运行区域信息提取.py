@@ -46,3 +46,4 @@ result=pd.DataFrame(
         '位置':day_location_list
     }
                     )
+result.to_excel('位置信息数据.xlsx')
