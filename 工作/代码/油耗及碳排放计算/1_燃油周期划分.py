@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-data = pd.read_excel('/Users/xuchangmao/Desktop/工作/排放模型/燃油周期/周期验证/7月29日-8月15原始数据.xlsx')
+data = pd.read_excel('/Users/xuchangmao/Desktop/工作/油耗行为分析/吉林云南对比/LFNA4KCB5MTB15873---清洗后数据.xlsx')
 
 
 def moving_average(interval, window_size):
@@ -12,13 +12,13 @@ def moving_average(interval, window_size):
 x = data['油箱液位'].index.to_list()
 y_fuel = data['油箱液位'].to_list()  # 初始的油箱液位数据，list格式
 y_fuel_array = np.array(y_fuel)  # 滤波处理之前需要转换为array
-y_new_fuel = moving_average(interval=y_fuel_array, window_size=2000)  # 初始的油箱液位数据进行滤波处理
+y_new_fuel = moving_average(interval=y_fuel_array, window_size=10000)  # 初始的油箱液位数据进行滤波处理
 y_fuel_pd = pd.DataFrame(y_fuel_array)  # 原始的油箱液位，转换为dataframe
 y_new_fuel_pd = pd.DataFrame(y_new_fuel)  # 处理后的油箱液位，转换为dataframe
 
 
 fuel_diff = y_new_fuel_pd - y_new_fuel_pd.shift(20)  # 处理后的数据进行差分处理，20秒差分
-fuel_point = fuel_diff[fuel_diff[0] > 0.3][0]  # 变化量大于30%的点定位为加油点
+fuel_point = fuel_diff[fuel_diff[0] > 0.2][0]  # 变化量大于30%的点定位为加油点
 fuel_index = fuel_point.index.to_frame()  # 找到加油点的index，也就是时间
 fuel_index_diff = fuel_index - fuel_index.shift(1)  # 加油点index的差分，用来寻找端点index
 # 如果差分大于半天的秒数，那么就认为发生了加油行为，
@@ -43,3 +43,4 @@ urea_index_diff = urea_index - urea_index.shift(1)  # 加油点index的差分，
 # 如果差分大于半天的秒数，那么就认为发生了加油行为，
 urea_cycle = urea_index_diff[urea_index_diff[0] > 13200][0].index.to_list()  # 用这个list来保留周期的信息，list中就是周期端点
 
+# new_branch在这里显示

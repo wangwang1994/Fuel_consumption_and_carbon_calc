@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-data = pd.read_excel('/Users/xuchangmao/Desktop/工作/排放模型/燃油周期/周期验证/7月29日-8月15原始数据.xlsx')
+data = pd.read_excel('/Users/xuchangmao/Desktop/工作/排放模型/比排放及油耗计算/原始数据/高排放车原始数据/7月29日-8月14日---清洗后数据.xlsx')
 
 
 def moving_average(interval, window_size):
