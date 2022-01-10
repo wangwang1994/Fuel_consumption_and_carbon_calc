@@ -1,7 +1,7 @@
 import pandas as pd
 import requests
 import json
-
+import os
 
 file_path=input('输入文件路径：')
 vin=input('输入车辆信息：')
@@ -47,4 +47,4 @@ result=pd.DataFrame(
         '位置':day_location_list
     }
                     )
-result.to_excel(vin+'位置信息数据.xlsx')
+result.to_excel((os.path.dirname(file_path))+os.sep+vin+'位置信息数据.xlsx')
